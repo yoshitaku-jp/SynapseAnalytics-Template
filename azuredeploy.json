@@ -7,7 +7,11 @@
             "type": "string"
         },
         "location": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "リソースグループと同じ場所に作成"
+            }
         },
         "defaultDataLakeStorageAccountName": {
             "type": "string"
@@ -16,11 +20,12 @@
             "type": "string"
         },
         "sqlAdministratorLogin": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "sqldwuser"
         },
         "sqlAdministratorLoginPassword": {
             "type": "secureString",
-            "defaultValue": ""
+            "defaultValue": "P@ssw0rd"
         },
         "setWorkspaceIdentityRbacOnStorageAccount": {
             "type": "bool"
@@ -43,10 +48,6 @@
                 ""
             ]
         },
-        "tagValues": {
-            "type": "object",
-            "defaultValue": {}
-        },
         "storageSubscriptionID": {
             "type": "string",
             "defaultValue": "[subscription().subscriptionId]"
@@ -54,10 +55,6 @@
         "storageResourceGroupName": {
             "type": "string",
             "defaultValue": "[resourceGroup().name]"
-        },
-        "storageLocation": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]"
         },
         "storageRoleUniqueId": {
             "type": "string",
@@ -100,7 +97,14 @@
         }
     },
     "variables": {
-        "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe"
+        "base_name": "[concat(parameters('company'),'-',parameters('department'),'-bws-',parameters('user_name'))]",
+        "adf_name": "[concat(variables('base_name'),'-adf')]",
+        "adls_name": "[replace(toLower(concat(variables('base_name'),'-adls')),'-','')]",
+        "sqlserver_name": "[concat(variables('base_name'),'-sql')]",
+        "sqlpool_name": "[concat(variables('base_name'),'-dw')]",
+        "adb_workspace_name": "[concat(variables('base_name'),'-dbs')]",
+        "managedResourceGroupName": "[concat('databricks-rg-', variables('adb_workspace_name'), '-', uniqueString(variables('adb_workspace_name'), resourceGroup().id))]",
+        "managedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]",
     },
     "resources": [
         {
@@ -151,14 +155,14 @@
                 "[concat('Microsoft.Storage/storageAccounts/', parameters('defaultDataLakeStorageAccountName'))]",
                 "[concat('Microsoft.Resources/deployments/', parameters('defaultDataLakeStorageFilesystemName'))]"
             ],
-            "tags": "[parameters('tagValues')]"
+            "tags": {}
         },
         {
             "condition": "[parameters('isNewStorageAccount')]",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[parameters('defaultDataLakeStorageAccountName')]",
             "apiVersion": "2018-02-01",
-            "location": "[parameters('storageLocation')]",
+            "location": "[parameters('location')]",
             "properties": {
                 "accessTier": "[parameters('storageAccessTier')]",
                 "supportsHttpsTrafficOnly": "[parameters('storageSupportsHttpsTrafficOnly')]",
