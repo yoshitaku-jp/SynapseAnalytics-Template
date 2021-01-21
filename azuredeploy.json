@@ -3,15 +3,21 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.1",
     "parameters": {
-        "name": {
-            "type": "string"
+       "company": {
+            "type": "string",
+            "maxLength": 4,
         },
+        "department": {
+            "type": "string",
+            "maxLength": 4,
+        },
+        "user_name": {
+            "type": "string",
+            "maxLength": 6,
+        }
         "location": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]"
-        },
-        "defaultDataLakeStorageFilesystemName": {
-            "type": "string"
         },
         "sqlAdministratorLogin": {
             "type": "string",
@@ -21,65 +27,11 @@
             "type": "secureString",
             "defaultValue": "P@ssw0rd"
         },
-        "setWorkspaceIdentityRbacOnStorageAccount": {
-            "type": "bool"
-        },
-        "grantWorkspaceIdentityControlForSql": {
-            "type": "string",
-            "allowedValues": [
-                "Enabled",
-                "Disabled"
-            ]
-        },
-        "managedVirtualNetwork": {
-            "type": "string",
-            "allowedValues": [
-                "default",
-                ""
-            ]
-        },
-        "storageSubscriptionID": {
-            "type": "string",
-            "defaultValue": "[subscription().subscriptionId]"
-        },
-        "storageResourceGroupName": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().name]"
-        },
-        "storageRoleUniqueId": {
-            "type": "string",
-            "defaultValue": "[newGuid()]"
-        },
-        "isNewStorageAccount": {
-            "type": "bool",
-            "defaultValue": false
-        },
-        "isNewFileSystemOnly": {
-            "type": "bool",
-            "defaultValue": false
-        },
-        "adlaResourceId": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "userObjectId": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "setSbdcRbacOnStorageAccount": {
-            "type": "bool",
-            "defaultValue": false
-        }
     },
     "variables": {
         "base_name": "[concat(parameters('company'),'-',parameters('department'),'-bws-',parameters('user_name'))]",
-        "adf_name": "[concat(variables('base_name'),'-adf')]",
         "adls_name": "[replace(toLower(concat(variables('base_name'),'-adls')),'-','')]",
-        "sqlserver_name": "[concat(variables('base_name'),'-sql')]",
-        "sqlpool_name": "[concat(variables('base_name'),'-dw')]",
-        "adb_workspace_name": "[concat(variables('base_name'),'-dbs')]",
-        "managedResourceGroupName": "[concat('databricks-rg-', variables('adb_workspace_name'), '-', uniqueString(variables('adb_workspace_name'), resourceGroup().id))]",
-        "managedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]"
+        "synapse_name": "[concat(variables('base_name'),'-syn')]",
     },
     "resources": [
         {
