@@ -100,7 +100,7 @@
         }
     },
     "variables": {
-        "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+        "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe"
     },
     "resources": [
         {
