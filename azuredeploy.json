@@ -104,7 +104,7 @@
         "sqlpool_name": "[concat(variables('base_name'),'-dw')]",
         "adb_workspace_name": "[concat(variables('base_name'),'-dbs')]",
         "managedResourceGroupName": "[concat('databricks-rg-', variables('adb_workspace_name'), '-', uniqueString(variables('adb_workspace_name'), resourceGroup().id))]",
-        "managedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]",
+        "managedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]"
     },
     "resources": [
         {
