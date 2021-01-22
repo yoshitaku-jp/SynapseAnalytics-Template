@@ -163,7 +163,7 @@
       ]
     },
     {
-      "condition": false,
+      "condition": true,
       "type": "Microsoft.Synapse/workspaces/bigDataPools",
       "apiVersion": "2019-06-01-preview",
       "name": "[concat(variables('synapse_name'), '/', variables('spark_pool'))]",
