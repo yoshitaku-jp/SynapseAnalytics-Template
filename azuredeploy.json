@@ -144,7 +144,10 @@
               "apiVersion": "2018-02-01",
               "properties": {
                 "publicAccess": "None"
-              }
+              },
+              "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]"
+              ]
             }
           ]
         }
