@@ -31,6 +31,7 @@
     "base_name": "[concat(parameters('company'),'-',parameters('department'),'-bws-',parameters('user_name'))]",
     "synapse_name": "[concat(variables('base_name'),'-syn')]",
     "adls_name": "[replace(toLower(concat(variables('base_name'),'-adls')),'-','')]",
+    "defaultDataLakeStorageAccountUrl": "[concat('https://', variables('adls_name'), '.dfs.core.windows.net')]",
     "filesystem_name": "datalake"
   },
   "resources": [
@@ -43,6 +44,10 @@
         "type": "SystemAssigned"
       },
       "properties": {
+        "defaultDataLakeStorage": {
+            "accountUrl": "[variables('defaultDataLakeStorageAccountUrl')]",
+            "filesystem": "[variables('filesystem_name')]"
+        },
         "sqlAdministratorLogin": "[parameters('sqlAdministratorLogin')]",
         "sqlAdministratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]"
       },
