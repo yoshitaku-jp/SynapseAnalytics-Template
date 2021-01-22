@@ -113,7 +113,7 @@
         ]
     },
     {
-        "condition": true,
+        "condition": false,
         "apiVersion": "2019-05-01",
         "name": "[variables('filesystem_name')]",
         "type": "Microsoft.Resources/deployments",
