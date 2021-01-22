@@ -29,7 +29,9 @@
   },
   "variables": {
     "base_name": "[concat(parameters('company'),'-',parameters('department'),'-bws-',parameters('user_name'))]",
-    "synapse_name": "[concat(variables('base_name'),'-syn')]"
+    "synapse_name": "[concat(variables('base_name'),'-syn')]",
+    "adls_name": "[replace(toLower(concat(variables('base_name'),'-adls')),'-','')]",
+    "filesystem_name": "datalake"
   },
   "resources": [
     {
@@ -67,12 +69,81 @@
           "location": "[parameters('location')]",
           "name": "default",
           "properties": {
-
+            "grantSqlControlToManagedIdentity": {
+                "desiredState": "Enabled"
+            }
           },
           "type": "managedIdentitySqlControlSettings"
         }
-      ],
+    ],
+        "dependsOn": [
+            "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]",
+            "[concat('Microsoft.Resources/deployments/', variables('filesystem_name'))]"
+        ],
       "tags": {}
+    },
+    {
+        "condition": true,
+        "apiVersion": "2019-05-01",
+        "name": "storageRoleDeploymentResource",
+        "type": "Microsoft.Resources/deployments",
+        "subscriptionId": "[parameters('storageSubscriptionID')]",
+        "resourceGroup": "[parameters('storageResourceGroupName')]",
+        "dependsOn": [
+            "[concat('Microsoft.Synapse/workspaces/', variables('synapse_name'))]"
+        ],
+        "properties": {
+            "mode": "Incremental",
+            "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {},
+                "variables": {},
+                "resources": [
+                    {
+                        "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+                        "apiVersion": "2018-09-01-preview",
+                        "name": "[concat(variables('adls_name'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', variables('synapse_name'), '/', parameters('storageRoleUniqueId'))))]",
+                        "location": "[parameters('location')]",
+                        "properties": {
+                            "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",
+                            "principalId": "[reference(concat('Microsoft.Synapse/workspaces/', variables('synapse_name')), '2019-06-01-preview', 'Full').identity.principalId]",
+                            "principalType": "ServicePrincipal"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "condition": true,
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('adls_name')]",
+        "apiVersion": "2019-06-01",
+        "location": "[parameters('location')]",
+        "properties": {
+            "supportsHttpsTrafficOnly": true,
+            "isHnsEnabled": true
+        },
+        "sku": {
+            "name": "Standard_RAGRS"
+        },
+        "kind": "StorageV2",
+        "tags": {},
+        "resources": [
+            {
+                "condition": true,
+                "name": "[concat('default/', variables('filesystem_name'))]",
+                "type": "blobServices/containers",
+                "apiVersion": "2019-06-01",
+                "properties": {
+                    "publicAccess": "None"
+                },
+                "dependsOn": [
+                    "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]"
+                ]
+            }
+        ]
     }
   ],
   "outputs": {}
