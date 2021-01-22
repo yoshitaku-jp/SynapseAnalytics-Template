@@ -26,7 +26,6 @@
       "type": "secureString",
       "defaultValue": "P@ssw0rd"
     },
-    
     "storageRoleUniqueId": {
       "type": "string",
       "defaultValue": "[newGuid()]"
@@ -53,8 +52,8 @@
       },
       "properties": {
         "defaultDataLakeStorage": {
-            "accountUrl": "[variables('defaultDataLakeStorageAccountUrl')]",
-            "filesystem": "[variables('filesystem_name')]"
+          "accountUrl": "[variables('defaultDataLakeStorageAccountUrl')]",
+          "filesystem": "[variables('filesystem_name')]"
         },
         "sqlAdministratorLogin": "[parameters('sqlAdministratorLogin')]",
         "sqlAdministratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]"
@@ -83,75 +82,46 @@
           "name": "default",
           "properties": {
             "grantSqlControlToManagedIdentity": {
-                "desiredState": "Enabled"
+              "desiredState": "Enabled"
             }
           },
           "type": "managedIdentitySqlControlSettings"
         }
-    ],
-        "dependsOn": [
-            "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]",
-            "[concat('Microsoft.Resources/deployments/', variables('filesystem_name'))]"
-        ],
+      ],
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]"
+      ],
       "tags": {}
     },
     {
-        "condition": true,
-        "type": "Microsoft.Storage/storageAccounts",
-        "name": "[variables('adls_name')]",
-        "apiVersion": "2019-06-01",
-        "location": "[parameters('location')]",
-        "properties": {
-            "supportsHttpsTrafficOnly": true,
-            "isHnsEnabled": true
-        },
-        "sku": {
-            "name": "Standard_RAGRS"
-        },
-        "kind": "StorageV2",
-        "tags": {},
-        "resources": [
-            {
-                "condition": true,
-                "name": "[concat('default/', variables('filesystem_name'))]",
-                "type": "blobServices/containers",
-                "apiVersion": "2019-06-01",
-                "properties": {
-                    "publicAccess": "None"
-                },
-                "dependsOn": [
-                    "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]"
-                ]
-            }
-        ]
-    },
-    {
       "condition": true,
-      "apiVersion": "2019-05-01",
-      "name": "[variables('filesystem_name')]",
-      "type": "Microsoft.Resources/deployments",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('adls_name')]",
+      "apiVersion": "2019-06-01",
+      "location": "[parameters('location')]",
       "properties": {
-        "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "parameters": {},
-          "variables": {},
-          "resources": [
-            {
-              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-              "name": "[concat(variables('adls_name'), '/default/', variables('filesystem_name'))]",
-              "apiVersion": "2018-02-01",
-              "properties": {
-                "publicAccess": "None"
-              },
-              "dependsOn": [
-                "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]"
-              ]
-            }
+        "supportsHttpsTrafficOnly": true,
+        "isHnsEnabled": true
+      },
+      "sku": {
+        "name": "Standard_RAGRS"
+      },
+      "kind": "StorageV2",
+      "tags": {},
+      "resources": [
+        {
+          "condition": true,
+          "name": "[concat('default/', variables('filesystem_name'))]",
+          "type": "blobServices/containers",
+          "apiVersion": "2019-06-01",
+          "properties": {
+            "publicAccess": "None"
+          },
+          "dependsOn": [
+            "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]"
           ]
         }
-      }
+      ]
     },
     {
       "condition": true,
@@ -186,18 +156,18 @@
     },
     {
       "condition": true,
-        "type": "Microsoft.Synapse/workspaces/sqlPools",
-        "apiVersion": "2019-06-01-preview",
-        "location": "[parameters('location')]",
-        "tags": {},
-        "name": "[concat(variables('synapse_name'), '/', variables('sql_pool'))]",
-        "sku": {
-            "name": "DW100c"
-        },
-        "properties": {
-            "createMode": "Default",
-            "collation": "SQL_Latin1_General_CP1_CI_AS"
-        },
+      "type": "Microsoft.Synapse/workspaces/sqlPools",
+      "apiVersion": "2019-06-01-preview",
+      "location": "[parameters('location')]",
+      "tags": {},
+      "name": "[concat(variables('synapse_name'), '/', variables('sql_pool'))]",
+      "sku": {
+        "name": "DW100c"
+      },
+      "properties": {
+        "createMode": "Default",
+        "collation": "SQL_Latin1_General_CP1_CI_AS"
+      },
       "dependsOn": [
         "[concat('Microsoft.Synapse/workspaces/', variables('synapse_name'))]"
       ]
