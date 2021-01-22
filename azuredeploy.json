@@ -145,6 +145,7 @@
         }
     },
     {
+      "condition": false,
         "type": "Microsoft.Synapse/workspaces/sqlPools",
         "apiVersion": "2019-06-01-preview",
         "location": "[parameters('location')]",
@@ -159,36 +160,37 @@
         }
     },
     {
-        "type": "Microsoft.Synapse/workspaces/bigDataPools",
-        "apiVersion": "2019-06-01-preview",
-        "name": "[concat(variables('synapse_name'), '/', variables('spark_pool'))]",
-        "location": "[parameters('location')]",
-        "tags": {},
-        "properties": {
-            "nodeCount": 10,
-            "isComputeIsolationEnabled": false,
-            "nodeSizeFamily": "MemoryOptimized",
-            "nodeSize": "small",
-            "autoScale": {
-                "enabled": false,
-                "minNodeCount": 3,
-                "maxNodeCount": 3
-            },
-            "autoPause": {
-                "enabled": true,
-                "delayInMinutes": 15
-            },
-            "sparkVersion": "2.4",
-            "libraryRequirements": {
-                "filename": "",
-                "content": ""
-            },
-            "sessionLevelPackagesEnabled": false,
-            "sparkConfigProperties": {
-                "filename": "",
-                "content": ""
-            }
-        }
+      "condition": false,
+      "type": "Microsoft.Synapse/workspaces/bigDataPools",
+      "apiVersion": "2019-06-01-preview",
+      "name": "[concat(variables('synapse_name'), '/', variables('spark_pool'))]",
+      "location": "[parameters('location')]",
+      "tags": {},
+      "properties": {
+          "nodeCount": 10,
+          "isComputeIsolationEnabled": false,
+          "nodeSizeFamily": "MemoryOptimized",
+          "nodeSize": "small",
+          "autoScale": {
+              "enabled": false,
+              "minNodeCount": 3,
+              "maxNodeCount": 3
+          },
+          "autoPause": {
+              "enabled": true,
+              "delayInMinutes": 15
+          },
+          "sparkVersion": "2.4",
+          "libraryRequirements": {
+              "filename": "",
+              "content": ""
+          },
+          "sessionLevelPackagesEnabled": false,
+          "sparkConfigProperties": {
+              "filename": "",
+              "content": ""
+          }
+      }
     }
   ],
   "outputs": {}
