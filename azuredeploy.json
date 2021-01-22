@@ -33,7 +33,6 @@
     "adls_name": "[replace(toLower(concat(variables('base_name'),'-adls')),'-','')]",
     "defaultDataLakeStorageAccountUrl": "[concat('https://', variables('adls_name'), '.dfs.core.windows.net')]",
     "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
-
     "filesystem_name": "datalake",
     "sql_pool": "sql_pool",
     "spark_pool": "sparkpool"
@@ -120,6 +119,31 @@
                 ]
             }
         ]
+    },
+    {
+      "condition": false,
+      "apiVersion": "2019-05-01",
+      "name": "[variables('filesystem_name')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+              "name": "[concat(variables('adls_name'), '/default/', variables('filesystem_name'))]",
+              "apiVersion": "2018-02-01",
+              "properties": {
+                "publicAccess": "None"
+              }
+            }
+          ]
+        }
+      }
     },
     {
       "condition": true,
