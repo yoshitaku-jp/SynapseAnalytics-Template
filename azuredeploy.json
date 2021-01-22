@@ -145,7 +145,7 @@
         }
     },
     {
-      "condition": false,
+      "condition": true,
         "type": "Microsoft.Synapse/workspaces/sqlPools",
         "apiVersion": "2019-06-01-preview",
         "location": "[parameters('location')]",
@@ -157,7 +157,10 @@
         "properties": {
             "createMode": "Default",
             "collation": "SQL_Latin1_General_CP1_CI_AS"
-        }
+        },
+      "dependsOn": [
+        "[concat('Microsoft.Synapse/workspaces/', variables('synapse_name'))]"
+      ]
     },
     {
       "condition": false,
@@ -167,30 +170,33 @@
       "location": "[parameters('location')]",
       "tags": {},
       "properties": {
-          "nodeCount": 10,
-          "isComputeIsolationEnabled": false,
-          "nodeSizeFamily": "MemoryOptimized",
-          "nodeSize": "small",
-          "autoScale": {
-              "enabled": false,
-              "minNodeCount": 3,
-              "maxNodeCount": 3
-          },
-          "autoPause": {
-              "enabled": true,
-              "delayInMinutes": 15
-          },
-          "sparkVersion": "2.4",
-          "libraryRequirements": {
-              "filename": "",
-              "content": ""
-          },
-          "sessionLevelPackagesEnabled": false,
-          "sparkConfigProperties": {
-              "filename": "",
-              "content": ""
-          }
-      }
+        "nodeCount": 10,
+        "isComputeIsolationEnabled": false,
+        "nodeSizeFamily": "MemoryOptimized",
+        "nodeSize": "small",
+        "autoScale": {
+          "enabled": false,
+          "minNodeCount": 3,
+          "maxNodeCount": 3
+        },
+        "autoPause": {
+          "enabled": true,
+          "delayInMinutes": 15
+        },
+        "sparkVersion": "2.4",
+        "libraryRequirements": {
+          "filename": "",
+          "content": ""
+        },
+        "sessionLevelPackagesEnabled": false,
+        "sparkConfigProperties": {
+          "filename": "",
+          "content": ""
+        }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Synapse/workspaces/', variables('synapse_name'))]"
+      ]
     }
   ],
   "outputs": {}
