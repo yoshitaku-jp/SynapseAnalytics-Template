@@ -32,7 +32,9 @@
     "synapse_name": "[concat(variables('base_name'),'-syn')]",
     "adls_name": "[replace(toLower(concat(variables('base_name'),'-adls')),'-','')]",
     "defaultDataLakeStorageAccountUrl": "[concat('https://', variables('adls_name'), '.dfs.core.windows.net')]",
-    "filesystem_name": "datalake"
+    "filesystem_name": "datalake",
+    "sql_pool": "sql_pool",
+    "spark_pool": "sparkpool"
   },
   "resources": [
     {
@@ -139,6 +141,52 @@
                         }
                     }
                 ]
+            }
+        }
+    },
+    {
+        "type": "Microsoft.Synapse/workspaces/sqlPools",
+        "apiVersion": "2019-06-01-preview",
+        "location": "[parameters('location')]",
+        "tags": {},
+        "name": "[concat(variables('synapse_name'), '/', variables('sql_pool'))]",
+        "sku": {
+            "name": "DW100c"
+        },
+        "properties": {
+            "createMode": "Default",
+            "collation": "SQL_Latin1_General_CP1_CI_AS"
+        }
+    },
+    {
+        "type": "Microsoft.Synapse/workspaces/bigDataPools",
+        "apiVersion": "2019-06-01-preview",
+        "name": "[concat(variables('synapse_name'), '/', variables('spark_pool'))]",
+        "location": "[parameters('location')]",
+        "tags": {},
+        "properties": {
+            "nodeCount": 10,
+            "isComputeIsolationEnabled": false,
+            "nodeSizeFamily": "MemoryOptimized",
+            "nodeSize": "small",
+            "autoScale": {
+                "enabled": false,
+                "minNodeCount": 3,
+                "maxNodeCount": 3
+            },
+            "autoPause": {
+                "enabled": true,
+                "delayInMinutes": 15
+            },
+            "sparkVersion": "2.4",
+            "libraryRequirements": {
+                "filename": "",
+                "content": ""
+            },
+            "sessionLevelPackagesEnabled": false,
+            "sparkConfigProperties": {
+                "filename": "",
+                "content": ""
             }
         }
     }
