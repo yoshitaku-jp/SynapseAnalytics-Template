@@ -60,14 +60,17 @@
           "user_name": {
             "value": "[concat(parameters('user_name'),copyIndex())]"
           },
-          "sql_admin_name": {
+          "sqlAdministratorLogin": {
             "value": "[parameters('sqlAdministratorLogin')]"
           },
-          "sql_admin_password": {
+          "sqlAdministratorLoginPassword": {
             "value": "[parameters('sqlAdministratorLoginPassword')]"
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "storageRoleUniqueId": {
+            "value": "[parameters('storageRoleUniqueId')]"
           }
         }
       },
