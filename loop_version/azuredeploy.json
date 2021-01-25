@@ -47,7 +47,7 @@
           "scope": "inner"
         },
         "templateLink": {
-          "uri": "",
+          "uri": "https://raw.githubusercontent.com/yoshitaku-jp/SynapseAnalytics-Template/main/azuredeploy.json",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
