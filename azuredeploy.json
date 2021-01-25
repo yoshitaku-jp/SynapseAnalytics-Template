@@ -138,7 +138,7 @@
             {
               "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
               "apiVersion": "2018-09-01-preview",
-              "name": "[concat(variables('adls_name'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', variables('synapse_name'), '/',newGuid())))]",
+              "name": "[concat(variables('adls_name'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', variables('synapse_name'), '/',parameters('user_name'))))]",
               "location": "[parameters('location')]",
               "properties": {
                 "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",
