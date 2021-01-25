@@ -71,7 +71,7 @@
         "name": "bwwsetcopy",
         "count": "[parameters('loop_number')]",
         "mode": "serial",
-        "batchSize": 5
+        "batchSize": 1
       }
     }
   ],

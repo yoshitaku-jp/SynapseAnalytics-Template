@@ -120,34 +120,18 @@
       ]
     },
     {
-      "condition": true,
-      "apiVersion": "2019-05-01",
-      "name": "storageRoleDeploymentResource",
-      "type": "Microsoft.Resources/deployments",
+      "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+      "apiVersion": "2018-09-01-preview",
+      "name": "[concat(variables('adls_name'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', variables('synapse_name'), '/',parameters('user_name'))))]",
+      "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Synapse/workspaces/', variables('synapse_name'))]"
+                "[concat('Microsoft.Synapse/workspaces/', variables('synapse_name'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', variables('adls_name'))]"
       ],
       "properties": {
-        "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "parameters": {},
-          "variables": {},
-          "resources": [
-            {
-              "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
-              "apiVersion": "2018-09-01-preview",
-              "name": "[concat(variables('adls_name'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', variables('synapse_name'), '/',parameters('user_name'))))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",
-                "principalId": "[reference(concat('Microsoft.Synapse/workspaces/', variables('synapse_name')), '2019-06-01-preview', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-              }
-            }
-          ]
-        }
+        "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",
+        "principalId": "[reference(concat('Microsoft.Synapse/workspaces/', variables('synapse_name')), '2019-06-01-preview', 'Full').identity.principalId]",
+        "principalType": "ServicePrincipal"
       }
     },
     {
