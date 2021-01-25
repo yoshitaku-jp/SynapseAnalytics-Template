@@ -25,10 +25,6 @@
     "sqlAdministratorLoginPassword": {
       "type": "secureString",
       "defaultValue": "P@ssw0rd"
-    },
-    "storageRoleUniqueId": {
-      "type": "string",
-      "defaultValue": "[newGuid()]"
     }
   },
   "variables": {
@@ -142,7 +138,7 @@
             {
               "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
               "apiVersion": "2018-09-01-preview",
-              "name": "[concat(variables('adls_name'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', variables('synapse_name'), '/', parameters('storageRoleUniqueId'))))]",
+              "name": "[concat(variables('adls_name'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataContributorRoleID'), '/', variables('synapse_name'), '/',newGuid())))]",
               "location": "[parameters('location')]",
               "properties": {
                 "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleID'))]",

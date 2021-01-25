@@ -30,10 +30,6 @@
     "sqlAdministratorLoginPassword": {
       "type": "secureString",
       "defaultValue": "P@ssw0rd"
-    },
-    "storageRoleUniqueId": {
-      "type": "string",
-      "defaultValue": "[newGuid()]"
     }
   },
   "resources": [
@@ -68,9 +64,6 @@
           },
           "location": {
             "value": "[parameters('location')]"
-          },
-          "storageRoleUniqueId": {
-            "value": "[parameters('storageRoleUniqueId')]"
           }
         }
       },
